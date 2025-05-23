@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Subscription</title>
+</head>
+<body>
+    <h2>Subscribe</h2>
+    <input type="email" id="emailInput" placeholder="Enter your email">
+    <button id="submitEmailBtn">Submit</button>
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById("submitEmailBtn").addEventListener("click", async function () {
+            const email = document.getElementById("emailInput").value;
+            const responseMessage = document.getElementById("responseMessage");
+
+            if (!email.includes("@")) {
+                responseMessage.textContent = "Please enter a valid email.";
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/save-email", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+                responseMessage.textContent = data.message;
+            } catch (error) {
+                responseMessage.textContent = "Failed to send request.";
+            }
+        });
+    </script>
+</body>
+</html>
